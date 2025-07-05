@@ -86,3 +86,48 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+/* New .card class */
+.card {
+    height: 100%;
+    padding: 1rem;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 0.375rem;
+}
+
+.highlight {
+    padding: 1rem;
+    background-color: #f3f4f6; /* Example color */
+}
+
+    .highlight span {
+        background-color: var(--highlight-color);
+        border: solid 1px color-mix(in srgb, var(--highlight-color) 80%, black 20%);
+        margin: 1px;
+    }
+
+
+
+.k-border-success {
+    border-color: green; /* Example color */
+}
+
+.k-border-info {
+    border-color: #3b82f6; /* Example color */
+}
+
+.k-border-primary {
+    border-color: #2563eb; /* Example color */
+}
+
+#inputText {
+    width: 100%;
+    padding: 0;
+}
+
+.k-d-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
