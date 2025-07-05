@@ -1,0 +1,80 @@
+﻿@page "/"
+@using Microsoft.ML.Tokenizers
+
+<PageTitle>Home</PageTitle>
+
+<h3>Token Visualizer</h3>
+
+<div class="k-d-grid">
+    <div>
+        <!-- inputs -->
+        <b>Raw Text</b>
+        <div class="card k-border-info">
+            <EditForm Model="@model" OnValidSubmit="HandleValidSubmit">
+                <div>
+                    <label for="inputText">Enter text here to see it tokenized:</label>
+                    <textarea id="inputText" @bind="@model.InputText"></textarea>
+                </div>
+                <button type="submit">Tokenize</button>
+                <label for="showIds">Show Token IDs</label>
+                <input type="checkbox" id="showIds" @bind="@showIds" />
+            </EditForm>
+        </div>
+    </div>
+    <div>
+        <!-- outputs -->
+        <b>Tokenized Text</b>
+        <div class="card k-border-success">
+            <p class="highlight">
+                @if (Tokens is not null)
+                {
+                    foreach (var t in Tokens)
+                    {
+                        if (showIds)
+                        {
+                            <div class="k-d-flex">
+                                <span style="--highlight-color:@colors[colorIndex]">@t.Value</span>
+                                <span style="--highlight-color:@colors[colorIndex]">@t.Id</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <span style="--highlight-color:@colors[colorIndex]">@t.Value</span>
+                        }
+                        colorIndex = colorIndex >= 4 ? 0 : colorIndex + 1;
+                    }
+                }
+            </p>
+            <p>Token Count: @Tokens.Count</p>
+        </div>
+    </div>
+</div>
+
+@code {
+    bool showIds;
+    Tokenizer tokenizer;
+    int tokenCount;
+    int colorIndex = 0;
+    private string[] colors => [ "lightblue", "lightcoral", "lightgreen", "lightyellow", "lightcyan" ];
+    InputModel model = new();
+
+    int TokenCount { get; set; }
+    IReadOnlyList<EncodedToken>? Tokens { get; set; } = [];
+    IReadOnlyList<int>? TokensIds { get; set; } = [];
+
+    private void HandleValidSubmit()
+    {
+        Tokens = tokenizer.EncodeToTokens(model.InputText, out _);
+    }
+
+    protected override Task OnInitializedAsync()
+    {
+        tokenizer = TiktokenTokenizer.CreateForModel("gpt-4o");
+        // Initialize the tokenizer for the `gpt-4o` model. This instance should be cached for all subsequent use.
+        return base.OnInitializedAsync();
+    }
+
+    class InputModel {
+       public string InputText { get; set; } = "Text tokenization is the process of splitting a string into a list of tokens.";
+    }
+}
